@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="stylesheet" href="style.css"> -->
+</head>
+<body>
+    <!-- start Quiz button -->
+    <div class="start_btn"><button>Start Test</button></div>
+
+    <!-- Info Box
+    <div class="info_box">
+        <div class="info-title"><span>Some Rules of this Quiz</span></div>
+        <div class="info-list">
+            <div class="info">1. You will have only <span>15 seconds</span> per each question.</div>
+            <div class="info">2. Once you select your answer, it can't be undone.</div>
+            <div class="info">3. You can't select any option once time goes off.</div>
+            <div class="info">4. You can't exit from the Quiz while you're playing.</div>
+            <div class="info">5. You'll get points on the basis of your correct answers.</div>
+        </div>
+        <div class="buttons">
+            <button class="quit">Exit Quiz</button>
+            <button class="restart">Continue</button>
+        </div>
+    </div> -->
+
+    <!-- Quiz Box -->
+    <input type="text" name="unames" id="unames" value="{{name}}" readonly>
+    <div class="quiz_box">
+        <section>
+            <div class="que_text" id = "que">
+            </div>
+            <div class="option_list" id = "op">
+            </div>
+        </section>
+        <footer>
+            <div class="total_que">
+            </div>
+            <button class="next_btn">Next Que</button>
+            
+            <form method="post">
+                {% csrf_token %}
+                <div id="submit">
+
+                </div>
+                <div id="myvalues">
+                  <!-- <input type="text" name="qu1" id="qu1">
+                <input type="text" name="qu2" id="qu2">
+                <input type="text" name="qu3" id="qu3">
+                <input type="text" name="qu4" id="qu4">
+                <input type="text" name="qu5" id="qu5">
+                <input type="text" name="qu6" id="qu6">
+                <input type="text" name="qu7" id="qu7">
+                <input type="text" name="qu8" id="qu8">
+                <input type="text" name="qu9" id="qu9">
+                <input type="text" name="qu10" id="qu10">
+                <input type="text" name="qu11" id="qu11">
+                <input type="text" name="qu12" id="qu12">
+                <input type="text" name="qu13" id="qu13">
+                <input type="text" name="qu14" id="qu14">
+                <input type="text" name="qu15" id="qu15">
+                <input type="text" name="qu16" id="qu16">
+                <input type="text" name="qu17" id="qu17">
+                <input type="text" name="qu18" id="qu18">
+                <input type="text" name="qu19" id="qu19">
+                <input type="text" name="qu20" id="qu20">
+                <input type="text" name="qu21" id="qu21">
+                <input type="text" name="qu22" id="qu22">
+                <input type="text" name="qu23" id="qu23">
+                <input type="text" name="qu24" id="qu24">
+                <input type="text" name="qu25" id="qu25">
+                <input type="text" name="qu26" id="qu26">
+                <input type="text" name="qu27" id="qu27">
+                <input type="text" name="qu28" id="qu28">
+                <input type="text" name="qu29" id="qu29">
+                <input type="text" name="qu30" id="qu30">
+                <input type="text" name="qu31" id="qu31">
+                <input type="text" name="qu32" id="qu32">
+                <input type="text" name="qu33" id="qu33">
+                <input type="text" name="qu34" id="qu34">
+                <input type="text" name="qu35" id="qu35">
+                <input type="text" name="qu36" id="qu36">
+                <input type="text" name="qu37" id="qu37">
+                <input type="text" name="qu38" id="qu38">
+                <input type="text" name="qu39" id="qu39">
+                <input type="text" name="qu40" id="qu40">
+                <input type="text" name="qu41" id="qu41">
+                <input type="text" name="qu42" id="qu42">
+                <input type="text" name="qu43" id="qu43">
+                <input type="text" name="qu44" id="qu44">
+                <input type="text" name="qu45" id="qu45">
+                <input type="text" name="qu46" id="qu46">
+                <input type="text" name="qu47" id="qu47">
+                <input type="text" name="qu48" id="qu48">
+                <input type="text" name="qu49" id="qu49">
+                <input type="text" name="qu50" id="qu50"> -->
+                </div>
+                
+                
+            </form>
+            
+        </footer>
+    </div>
+
+    <!-- Result Box -->
+    <div class="result_box">
+        <div class="icon">
+            <i class="fas fa-crown"></i>
+        </div>
+        <div class="complete_text">You've completed the Test!</div>
+        <div class="score_text">
+            <!-- Here I've inserted Score Result from JavaScript -->
+        </div>
+        <div class="buttons">
+            <button class="restart">Replay Quiz</button>
+            <button class="quit">Quit Quiz</button>
+        </div>
+    </div>
+
+
+</body>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<style>
+/* importing google fonts */
+/* @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap'); */
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body{
+    background: #007bff;
+}
+
+::selection{
+    color: #fff;
+    background: #007bff;
+}
+
+.start_btn,
+.quiz_box,
+.result_box{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 
+                0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.quiz_box.activeQuiz,
+.result_box.activeResult{
+    opacity: 1;
+    z-index: 5;
+    pointer-events: auto;
+    transform: translate(-50%, -50%) scale(1); 
+}
+
+.start_btn button{
+    font-size: 25px;
+    font-weight: 500;
+    color: #007bff;
+    padding: 15px 30px;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    background: #fff;
+    cursor: pointer;
+    box-align: center;
+}
+
+/* .info_box{
+    width: 540px;
+    background: #fff;
+    border-radius: 5px;
+    transform: translate(-50%, -50%) scale(0.9);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+} */
+
+/* .info_box .info-title{
+    height: 60px;
+    width: 100%;
+    border-bottom: 1px solid lightgrey;
+    display: flex;
+    align-items: center;
+    padding: 0 30px;
+    border-radius: 5px 5px 0 0;
+    font-size: 20px;
+    font-weight: 600; */
+/* } */
+
+/* .info_box .info-list{
+    padding: 15px 30px;
+}
+
+.info_box .info-list .info{
+    margin: 5px 0;
+    font-size: 17px;
+}
+
+.info_box .info-list .info span{
+    font-weight: 600;
+    color: #007bff;
+}
+.info_box .buttons{
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 30px;
+    border-top: 1px solid lightgrey;
+} */
+
+/* .info_box .buttons button{
+    margin: 0 5px;
+    height: 40px;
+    width: 100px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    border: 1px solid #007bff;
+    transition: all 0.3s ease;
+} */
+
+.quiz_box{
+    width: 550px;
+    background: #fff;
+    border-radius: 5px;
+    transform: translate(-50%, -50%) scale(0.9);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+.quiz_box header{
+    position: relative;
+    z-index: 2;
+    height: 70px;
+    padding: 0 30px;
+    background: #fff;
+    border-radius: 5px 5px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0px 3px 5px 1px rgba(0,0,0,0.1);
+}
+
+.quiz_box header .title{
+    font-size: 20px;
+    font-weight: 600;
+}
+
+/* .quiz_box header .timer{
+    color: #004085;
+    background: #cce5ff;
+    border: 1px solid #b8daff;
+    height: 45px;
+    padding: 0 8px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 145px;
+} */
+
+/* .quiz_box header .timer .time_left_txt{
+    font-weight: 400;
+    font-size: 17px;
+    user-select: none;
+} */
+
+/* .quiz_box header .timer .timer_sec{
+    font-size: 18px;
+    font-weight: 500;
+    height: 30px;
+    width: 45px;
+    color: #fff;
+    border-radius: 5px;
+    line-height: 30px;
+    text-align: center;
+    background: #343a40;
+    border: 1px solid #343a40;
+    user-select: none;
+} */
+
+/* .quiz_box header .time_line{
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    height: 3px;
+    background: #007bff;
+} */
+
+section{
+    padding: 25px 30px 20px 30px;
+    background: #fff;
+}
+
+section .que_text{
+    font-size: 25px;
+    font-weight: 600;
+}
+
+section .option_list{
+    padding: 20px 0px;
+    display: block;   
+}
+
+section .option_list .option{
+    background: aliceblue;
+    border: 1px solid #84c5fe;
+    border-radius: 5px;
+    padding: 8px 15px;
+    font-size: 17px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+section .option_list .option:last-child{
+    margin-bottom: 0px;
+}
+
+section .option_list .option:hover{
+    color: #004085;
+    background: #cce5ff;
+    border: 1px solid #b8daff;
+}
+
+
+section .option_list .option.disabled{
+    pointer-events: none;
+}
+
+section .option_list .option .icon{
+    height: 26px;
+    width: 26px;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 13px;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    line-height: 24px;
+}
+
+footer{
+    height: 60px;
+    padding: 0 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid lightgrey;
+}
+
+footer .total_que span{
+    display: flex;
+    user-select: none;
+}
+
+footer .total_que span p{
+    font-weight: 500;
+    padding: 0 5px;
+}
+
+footer .total_que span p:first-child{
+    padding-left: 0px;
+}
+
+footer button{
+    height: 40px;
+    padding: 0 13px;
+    font-size: 18px;
+    font-weight: 400;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    color: #fff;
+    border-radius: 5px;
+    background: #007bff;
+    border: 1px solid #007bff;
+    line-height: 10px;
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.95);
+    transition: all 0.3s ease;
+}
+
+footer button:hover{
+    background: #0263ca;
+}
+
+footer button.show{
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1);
+}
+
+.result_box{
+    background: #fff;
+    border-radius: 5px;
+    display: flex;
+    padding: 25px 30px;
+    width: 450px;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    transform: translate(-50%, -50%) scale(0.9);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+.result_box .icon{
+    font-size: 100px;
+    color: #007bff;
+    margin-bottom: 10px;
+}
+
+.result_box .complete_text{
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.result_box .score_text span{
+    display: flex;
+    margin: 10px 0;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.result_box .score_text span p{
+    padding: 0 4px;
+    font-weight: 600;
+}
+
+.result_box .buttons{
+    display: flex;
+    margin: 20px 0;
+}
+
+.result_box .buttons button{
+    margin: 0 10px;
+    height: 45px;
+    padding: 0 20px;
+    font-size: 18px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    border: 1px solid #007bff;
+    transition: all 0.3s ease;
+}
+
+.buttons button.restart{
+    color: #fff;
+    background: #007bff;
+}
+
+.buttons button.restart:hover{
+    background: #0263ca;
+}
+
+.buttons button.quit{
+    color: #007bff;
+    background: #fff;
+}
+
+.buttons button.quit:hover{
+    color: #fff;
+    background: #007bff;
+}
+
+</style>
+<script>
+//selecting all required elements
+const start_btn = document.querySelector(".start_btn button");
+// const info_box = document.querySelector(".info_box");
+// const exit_btn = info_box.querySelector(".buttons .quit");
+// const continue_btn = info_box.querySelector(".buttons .restart");
+const quiz_box = document.querySelector(".quiz_box");
+const result_box = document.querySelector(".result_box");
+const option_list = document.querySelector(".option_list");
+// const time_line = document.querySelector("header .time_line");
+// const timeText = document.querySelector(".timer .time_left_txt");
+// const timeCount = document.querySelector(".timer .timer_sec");
+
+// if startQuiz button clicked
+start_btn.onclick = ()=>{
+    quiz_box.classList.add("activeQuiz"); //show quiz box
+    showQuetions(0); //calling showQestions function
+    queCounter(1); //passing 1 parameter to queCounter
+    // startTimer(15); //calling startTimer function
+    // startTimerLine(0); //calling startTimerLine function
+}
+
+let timeValue =  15;
+let que_count = 0;
+let que_numb = 1;
+let userScore = 0;
+let counter;
+let counterLine;
+let widthValue = 0;
+
+let questions = [
+    {
+    numb: 1,
+    question: "I am the life of the party.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [5.0,4.0,3.0,2.0,1.0]
+  },
+  {
+    numb: 2,
+    question: "I dont talk a lot.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [1.0,2.0,3.0,4.0,5.0]
+  },
+  {
+    numb: 3,
+    question: "I Feel comfortable around people.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [5.0,4.0,3.0,2.0,1.0]
+  },
+  {
+    numb: 4,
+    question: "I keep in the background.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [1.0,2.0,3.0,4.0,5.0]
+  },
+  {
+    numb: 5,
+    question: "I start conversations.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [5.0,4.0,3.0,2.0,1.0]
+  },
+  {
+    numb: 6,
+    question: "I have little to say.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [1.0,2.0,3.0,4.0,5.0]
+  },
+  {
+    numb: 7,
+    question: "I talk to a lot of different people at parties.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [5.0,4.0,3.0,2.0,1.0]
+  },
+  {
+    numb: 8,
+    question: "I dont like to draw attention to myself.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [1.0,2.0,3.0,4.0,5.0]
+  },
+  {
+    numb: 9,
+    question: "I dont mind being the centre of attention.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [5.0,4.0,3.0,2.0,1.0]
+  },
+  {
+    numb: 10,
+    question: "I am quiet around strangers.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [1.0,2.0,3.0,4.0,5.0]
+  },
+  {
+    numb: 11,
+    question: "I get stressed out easily.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [1.0,2.0,3.0,4.0,5.0]
+  },
+  {
+    numb: 12,
+    question: "I am relaxed most of the time.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [5.0,4.0,3.0,2.0,1.0]
+  },
+  {
+    numb: 13,
+    question: "I worry about things.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [1.0,2.0,3.0,4.0,5.0]
+  },
+  {
+    numb: 14,
+    question: "I seldom feel blue.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [5.0,4.0,3.0,2.0,1.0]
+  },
+  {
+    numb: 15,
+    question: "I am easily disturbed.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [1.0,2.0,3.0,4.0,5.0]
+  },
+  {
+    numb: 16,
+    question: "I get upset easily.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [1.0,2.0,3.0,4.0,5.0]
+  },
+  {
+    numb: 17,
+    question: "I change my mood a lot.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [1.0,2.0,3.0,4.0,5.0]
+  },
+  {
+    numb: 18,
+    question: "I have frequent mood swings.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [1.0,2.0,3.0,4.0,5.0]
+  },
+  {
+    numb: 19,
+    question: "I get irritated easily.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [1.0,2.0,3.0,4.0,5.0]
+  },
+  {
+    numb: 20,
+    question: "I often feel blue.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [1.0,2.0,3.0,4.0,5.0]
+  },
+  {
+    numb: 21,
+    question: "I feel very little concern for others.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [1.0,2.0,3.0,4.0,5.0]
+  },
+  {
+    numb: 22,
+    question: "I am interested in people.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [5.0,4.0,3.0,2.0,1.0]
+  },
+  {
+    numb: 23,
+    question: "I insult people.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [1.0,2.0,3.0,4.0,5.0]
+  },
+  {
+    numb: 24,
+    question: "I sympathize with others feelings.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [5.0,4.0,3.0,2.0,1.0]
+  },
+  {
+    numb: 25,
+    question: "I am not interested in others problems.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [1.0,2.0,3.0,4.0,5.0]
+  },
+  {
+    numb: 26,
+    question: "I have a soft heart.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [5.0,4.0,3.0,2.0,1.0]
+  },
+  {
+    numb: 27,
+    question: "I am not really interested in others.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [1.0,2.0,3.0,4.0,5.0]
+  },
+  {
+    numb: 28,
+    question: "I take time out for others.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [5.0,4.0,3.0,2.0,1.0]
+  },
+  {
+    numb: 29,
+    question: "I feel others emotions.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [5.0,4.0,3.0,2.0,1.0]
+  },
+  {
+    numb: 30,
+    question: "I make people feel at ease.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [5.0,4.0,3.0,2.0,1.0]
+  },
+  {
+    numb: 31,
+    question: "I am always prepared.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [5.0,4.0,3.0,2.0,1.0]
+  },
+  {
+    numb: 32,
+    question: "I leave my belongings around.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [1.0,2.0,3.0,4.0,5.0]
+  },
+  {
+    numb: 33,
+    question: "I pay attention to details.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [5.0,4.0,3.0,2.0,1.0]
+  },
+  {
+    numb: 34,
+    question: "I make a mess of things.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [1.0,2.0,3.0,4.0,5.0]
+  },
+  {
+    numb: 35,
+    question: "I get chores done right away.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [5.0,4.0,3.0,2.0,1.0]
+  },
+  {
+    numb: 36,
+    question: "I often forget to put things back in their place.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [1.0,2.0,3.0,4.0,5.0]
+  },
+  {
+    numb: 37,
+    question: "I like to order people.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [1.0,2.0,3.0,4.0,5.0]
+  },
+  {
+    numb: 38,
+    question: "I shirk(neglect) my duties.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [1.0,2.0,3.0,4.0,5.0]
+  },
+  {
+    numb: 39,
+    question: "I follow a schedule.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [5.0,4.0,3.0,2.0,1.0]
+  },
+  {
+    numb: 40,
+    question: "I am exacting in my work.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [5.0,4.0,3.0,2.0,1.0]
+  },
+  {
+    numb: 41,
+    question: "I have a rich vocabulary.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [5.0,4.0,3.0,2.0,1.0]
+  },
+  {
+    numb: 42,
+    question: "I have difficulty in understanding abstract ideas.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [1.0,2.0,3.0,4.0,5.0]
+  },
+  {
+    numb: 43,
+    question: "I have a vivid imagination.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [5.0,4.0,3.0,2.0,1.0]
+  },
+  {
+    numb: 44,
+    question: "I am not interested in abstract.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [1.0,2.0,3.0,4.0,5.0]
+  },
+  {
+    numb: 45,
+    question: "I have excellent ideas.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [5.0,4.0,3.0,2.0,1.0]
+  },
+  {
+    numb: 46,
+    question: "I do not have a good imagination.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [1.0,2.0,3.0,4.0,5.0]
+  },
+  {
+    numb: 47,
+    question: "I am quick to understand things.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [5.0,4.0,3.0,2.0,1.0]
+  },
+  {
+    numb: 48,
+    question: "I use difficult words.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [1.0,2.0,3.0,4.0,5.0]
+  },
+  {
+    numb: 49,
+    question: "I spend time reflecting on things.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [5.0,4.0,3.0,2.0,1.0]
+  },
+  {
+    numb: 50,
+    question: "I am full of ideas.",
+    options: [        
+      "Strongly Agree",
+      "Moderately Agree",
+      "Neither Agree nor Disagree",
+      "Moderately Disagree",
+      "Disagree"
+    ],
+    val: [5.0,4.0,3.0,2.0,1.0]
+  }, 
+
+];
+
+
+const restart_quiz = result_box.querySelector(".buttons .restart");
+const quit_quiz = result_box.querySelector(".buttons .quit");
+
+// if restartQuiz button clicked
+restart_quiz.onclick = ()=>{
+    quiz_box.classList.add("activeQuiz"); //show quiz box
+    result_box.classList.remove("activeResult"); //hide result box
+    timeValue = 15; 
+    que_count = 0;
+    que_numb = 1;
+    userScore = 0;
+    widthValue = 0;
+    showQuetions(que_count); //calling showQestions function
+    queCounter(que_numb); //passing que_numb value to queCounter
+    // clearInterval(counter); //clear counter
+    // clearInterval(counterLine); //clear counterLine
+    // startTimer(timeValue); //calling startTimer function
+    // startTimerLine(widthValue); //calling startTimerLine function
+    // timeText.textContent = "Time Left"; //change the text of timeText to Time Left
+    next_btn.classList.remove("show"); //hide the next button
+}
+
+// if quitQuiz button clicked
+quit_quiz.onclick = ()=>{
+    window.location.reload(); //reload the current window
+}
+
+const next_btn = document.querySelector("footer .next_btn");
+const bottom_ques_counter = document.querySelector("footer .total_que");
+
+// if Next Que button clicked
+option_list.onclick = ()=>{
+    if(que_count < questions.length - 1){ //if question count is less than total question length
+        que_count++; //increment the que_count value
+        que_numb++; //increment the que_numb value
+        showQuetions(que_count); //calling showQestions function
+        queCounter(que_numb); //passing que_numb value to queCounter
+        // clearInterval(counter); //clear counter
+        // clearInterval(counterLine); //clear counterLine
+        // startTimer(timeValue); //calling startTimer function
+        // startTimerLine(widthValue); //calling startTimerLine function
+        // timeText.textContent = "Time Left"; //change the timeText to Time Left
+        // next_btn.classList.remove("show"); //hide the next button
+    }
+    
+      // var res = resultlist;
+      //,resultlist["1"]];
+      // console.log("HDKJFKHDKF");
+      // console.log(res);
+      // console.log(typeof(res))
+      // console.log(typeof(resultlist))
+      // $.ajax(
+      //   {
+      //     type:'POST',
+      //     contentType:'application/json;charset-utf-08',
+      //     dataType:'json',
+      //     url:'http://127.0.0.1:8000/personality/question?value='+[res],
+      //     success:function(data){
+      //       var reply=data.reply;
+      //       if(reply=="success")
+      //       {
+      //         return;
+      //       }
+      //       else
+      //       {
+      //         alert("some error occurred")
+      //       }
+      //     }
+      //   }
+      // );
+     // mydb()
+    //  let i;
+    else{
+      c = document.getElementById("myvalues");
+      for(let i=1;i<=50;i++)
+      {
+        a=document.createElement("input");
+        a.setAttribute("id","qu"+i.toString());
+        a.setAttribute("name","qu"+i.toString());
+        a.setAttribute("value",resultlist[(i-1).toString()]);
+        a.setAttribute("hidden",true);
+        c.appendChild(a);
+      }
+
+      a = document.getElementById("submit");
+      b = document.createElement("input");
+      b.setAttribute("type","submit");
+        // b.setAttribute("onclick","mydb()");
+      a.appendChild(b);
+        // clearInterval(counter); //clear counter
+        // clearInterval(counterLine); //clear counterLine
+        // showResult(); //calling showResult function
+    }
+}
+
+// getting questions and options from array
+function showQuetions(index){
+    const que_text = document.querySelector(".que_text");
+    // for( const key in questions)
+    // {
+    //     for (const k in k)
+    //     {
+    //         console.log(k);
+    //     }
+    // }
+    // <form method="post"></form>
+    //creating a new span and div tag for question and option and passing the value using array index
+    let que_tag = '<span>'+ questions[index].numb + ". " + questions[index].question +'</span>';
+    let option_tag = '<form method="post" name="q".concat(index.toString())>{% csrf_token %}<div class="option"><span id="q".concat(index.toString()) name=id="q".concat(index.toString())>'+ questions[index].options[0]+'</span></div>'
+    + '<div class="option"><span id="q".concat(index.toString()) name=id="q".concat(index.toString())>'+ questions[index].options[1]+'</span></div>'
+    + '<div class="option"><span id="q".concat(index.toString()) name=id="q".concat(index.toString())>'+questions[index].options[2] +'</span></div>'
+    + '<div class="option"><span id="q".concat(index.toString()) name=id="q".concat(index.toString())>'+ questions[index].options[3]+'</span></div>'
+    + '<div class="option"><span id="q".concat(index.toString()) name=id="q".concat(index.toString())>'+ questions[index].options[4]+'</span></div></form>';
+    // que_text.innerHTML = que_tag; //adding new span tag inside que_tag
+    // option_list.innerHTML = option_tag; //adding new div tag inside option_tag
+    document.getElementById("que").innerHTML = que_tag;
+    document.getElementById("op").innerHTML = option_tag;
+
+    const option = option_list.querySelectorAll(".option");
+    let hope = "q".concat(index.toString());
+    console.log(index);
+    console.log(typeof(index));
+    console.log(hope);
+    console.log(typeof(hope));
+    // set onclick attribute to all available options
+    for(i=0; i < option.length; i++){
+        let v = questions[index].val[i];
+        option[i].setAttribute("onclick", "optionSelected("+v+")");
+        
+    }
+}
+// creating the new div tags which for icons
+// let tickIconTag = '<div class="icon tick"><i class="fas fa-check"></i></div>';
+// let crossIconTag = '<div class="icon cross"><i class="fas fa-times"></i></div>';
+let resultlist = [];
+//if user clicked on option
+function optionSelected(answer){
+    // clearInterval(counter); //clear counter
+    // clearInterval(counterLine); //clear counterLine
+    let userAns = answer;
+    console.log("type of userans")
+    // console.log(typeof(userAns)) //getting user selected option
+    // resultlist.append(userAns)
+    resultlist.push(userAns);
+    // console.log(typeof(resultlist))
+    // console.log(resultlist)
+    // console.log(resultlist);
+//     let correcAns = questions[que_count].answer; //getting correct answer from array
+    const allOptions = option_list.children.length; //getting all option items
+    
+//     if(userAns == correcAns){ //if user selected option is equal to array's correct answer
+//         userScore += 1; //upgrading score value with 1
+//         answer.classList.add("correct"); //adding green color to correct selected option
+//         answer.insertAdjacentHTML("beforeend", tickIconTag); //adding tick icon to correct selected option
+//         console.log("Correct Answer");
+//         console.log("Your correct answers = " + userScore);
+//     }else{
+//         answer.classList.add("incorrect"); //adding red color to correct selected option
+//         answer.insertAdjacentHTML("beforeend", crossIconTag); //adding cross icon to correct selected option
+//         console.log("Wrong Answer");
+//         for(i=0; i < allOptions; i++){
+//             if(option_list.children[i].textContent == correcAns){ //if there is an option which is matched to an array answer 
+//                 option_list.children[i].setAttribute("class", "option correct"); //adding green color to matched option
+//                 option_list.children[i].insertAdjacentHTML("beforeend", tickIconTag); //adding tick icon to matched option
+//                 console.log("Auto selected correct answer.");
+//             }
+//         }
+//     }
+    for(i=0; i < allOptions; i++){
+        option_list.children[i].classList.add("disabled"); //once user select an option then disabled all options
+    }
+    // next_btn.classList.add("show"); //show the next button if user selected any option
+ }
+
+function showResult(){
+    
+//     info_box.classList.remove("activeInfo"); //hide info box
+//     quiz_box.classList.remove("activeQuiz"); //hide quiz box
+//     result_box.classList.add("activeResult"); //show result box
+    const scoreText = result_box.querySelector(".score_text");
+//     if (userScore > 3){ // if user scored more than 3
+//         //creating a new span tag and passing the user score number and total question number
+//         let scoreTag = '<span>and congrats! 🎉, You got <p>'+ userScore +'</p> out of <p>'+ questions.length +'</p></span>';
+//         scoreText.innerHTML = scoreTag;  //adding new span tag inside score_Text
+//     }
+//     else if(userScore > 1){ // if user scored more than 1
+//         let scoreTag = '<span>and nice 😎, You got <p>'+ userScore +'</p> out of <p>'+ questions.length +'</p></span>';
+//         scoreText.innerHTML = scoreTag;
+//     }
+//     else{ // if user scored less than 1
+//         let scoreTag = '<span>and sorry 😐, You got only <p>'+ userScore +'</p> out of <p>'+ questions.length +'</p></span>';
+//         scoreText.innerHTML = scoreTag;
+//     }
+//         let scoreTag = '<span>and nice 😎, You got <p>'+ userScore +'</p> out of <p>'+ questions.length +'</p></span>';
+    scoreText.innerHTML = "Thank You 😎"
+}
+
+
+// function startTimer(time){
+//     counter = setInterval(timer, 1000);
+//     function timer(){
+//         timeCount.textContent = time; //changing the value of timeCount with time value
+//         time--; //decrement the time value
+//         if(time < 9){ //if timer is less than 9
+//             let addZero = timeCount.textContent; 
+//             timeCount.textContent = "0" + addZero; //add a 0 before time value
+//         }
+//         if(time < 0){ //if timer is less than 0
+//             clearInterval(counter); //clear counter
+//             timeText.textContent = "Time Off"; //change the time text to time off
+//             const allOptions = option_list.children.length; //getting all option items
+//             let correcAns = questions[que_count].answer; //getting correct answer from array
+//             for(i=0; i < allOptions; i++){
+//                 if(option_list.children[i].textContent == correcAns){ //if there is an option which is matched to an array answer
+//                     option_list.children[i].setAttribute("class", "option correct"); //adding green color to matched option
+//                     option_list.children[i].insertAdjacentHTML("beforeend", tickIconTag); //adding tick icon to matched option
+//                     console.log("Time Off: Auto selected correct answer.");
+//                 }
+//             }
+//             for(i=0; i < allOptions; i++){
+//                 option_list.children[i].classList.add("disabled"); //once user select an option then disabled all options
+//             }
+//             next_btn.classList.add("show"); //show the next button if user selected any option
+//         }
+//     }
+// }
+
+// function startTimerLine(time){
+//     counterLine = setInterval(timer, 29);
+//     function timer(){
+//         time += 1; //upgrading time value with 1
+//         time_line.style.width = time + "px"; //increasing width of time_line with px by time value
+//         if(time > 549){ //if time value is greater than 549
+//             clearInterval(counterLine); //clear counterLine
+//         }
+//     }
+// }
+
+function queCounter(index){
+    //creating a new span tag and passing the question number and total question
+    let totalQueCounTag = '<span><p>'+ index +'</p> of <p>'+ questions.length +'</p> Questions</span>';
+    bottom_ques_counter.innerHTML = totalQueCounTag;  //adding new span tag inside bottom_ques_counter
+}
+
+
+// function mydb()
+// {
+//     console.log("Inside mydb");
+//     var mysql = require('mysql');
+//     var con = mysql.createConnection({
+//         host:"localhost",
+//         user:"root",
+//         password:"",
+//         database:"personality"
+//     });
+//     con.connect(function(err){
+//         if(err)
+//             throw err;
+//         console.log("Connected");
+         
+//         var sql = "INSERT INTO personality_user_answers('"+username_id+"','"+q1+"','"+q2+"','"+q3+"','"+q4+"','"+q5+"','"+q6+"','"+q7+"','"+q8+"','"+q9+"','"+q10+"','"+q11+"','"+q12+"','"+q13+"','"+q14+"','"+q15+"','"+q16+"','"+q17+"','"+q18+"','"+q19+"','"+q20+"','"+q21+"','"+q22+"','"+q23+"','"+q24+"','"+q25+"','"+q26+"','"+q27+"','"+q28+"','"+q29+"','"+q30+"','"+q31+"','"+q32+"','"+q33+"','"+q34+"','"+q35+"','"+q36+"','"+q37+"','"+q38+"','"+q39+"','"+q40+"','"+q41+"','"+q42+"','"+q43+"','"+q44+"','"+q45+"','"+q46+"','"+q47+"','"+q48+"','"+q49+"','"+q50+"')'"+"'VALUES('"+"'akshit'"+"','"+rl[0]+"','"+rl[1]+"','"+rl[2]+"','"+rl[3]+"','"+rl[4]+"','"+rl[5]+"','"+rl[6]+"','"+rl[7]+"','"+rl[8]+"','"+rl[9]+"','"+rl[10]+"','"+rl[11]+"','"+rl[12]+"','"+rl[13]+"','"+rl[14]+"','"+rl[15]+"','"+rl[16]+"','"+rl[17]+"','"+rl[18]+"','"+rl[19]+"','"+rl[20]+"','"+rl[21]+"','"+rl[22]+"','"+rl[23]+"','"+rl[24]+"','"+rl[25]+"','"+rl[26]+"','"+rl[27]+"','"+rl[28]+"','"+rl[29]+"','"+rl[30]+"','"+rl[31]+"','"+rl[32]+"','"+rl[33]+"','"+rl[34]+"','"+rl[35]+"','"+rl[36]+"','"+rl[37]+"','"+rl[38]+"','"+rl[39]+"','"+rl[40]+"','"+rl[41]+"','"+rl[42]+"','"+rl[43]+"','"+rl[44]+"','"+rl[45]+"','"+rl[46]+"','"+rl[47]+"','"+rl[48]+"','"+rl[49]+"')'";
+//         con.query(sql,function(err,result)
+//         {
+//             if(err)
+//                 throw err;
+//             console.log("1 record inserted");
+//         });
+//     });
+//     // c = document.getElementById("finals");
+//     // d = document.createElement("input");
+//     // d.setAttribute("type","submit");
+//     // c.appendChild(d);
+// }
+
+
+
+
+
+
+// creating an array and passing the number, questions, options, and answers
+
+</script>
+</html>
