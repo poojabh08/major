@@ -11,6 +11,7 @@ class registration_details(models.Model):
     mobileno = models.CharField('mobileno', max_length=15,null=True)
     email = models.CharField('email', max_length=30,null=True)
     
+
 class user_answers(models.Model):
     username = models.ForeignKey('registration_details',unique=True,primary_key=True,default="null", on_delete = models.CASCADE)
     q1 = models.FloatField('q1',null=True)
@@ -63,3 +64,12 @@ class user_answers(models.Model):
     q48 = models.FloatField('q48',null=True)
     q49 = models.FloatField('q49',null=True)
     q50 = models.FloatField('q50',null=True)
+
+class clusterNum(models.Model):
+    username = models.ForeignKey('registration_details',unique=True,primary_key=True,default="null", on_delete = models.CASCADE)
+    clusNo = models.IntegerField('clusNo',null=True)
+    extroversion = models.FloatField('extroversion',null=True)
+    neurotic = models.FloatField('neurotic',null=True)
+    agreeable = models.FloatField('agreeable',null=True)
+    conscientious = models.FloatField('conscientious',null=True)
+    openness = models.FloatField('openness',null=True)
